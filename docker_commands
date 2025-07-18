@@ -1,0 +1,74 @@
+@echo off
+echo ==== Docker Basic to Advanced Commands ====
+echo.
+
+:: Version and Info
+docker --version
+docker info
+
+:: Image Commands
+docker pull ubuntu
+docker images
+docker rmi ubuntu
+
+:: Container Commands
+docker ps
+docker ps -a
+docker run ubuntu
+docker run -it ubuntu cmd
+docker run -d --name my-nginx nginx
+docker stop my-nginx
+docker start my-nginx
+docker restart my-nginx
+docker rm my-nginx
+
+:: Build Custom Image (Make sure Dockerfile exists in current folder)
+docker build -t my-node-app .
+docker images
+docker run -p 3000:3000 my-node-app
+
+:: Volumes
+docker volume create myvolume
+docker volume ls
+docker run -d -v myvolume:/data --name vol-test ubuntu
+docker volume inspect myvolume
+docker volume rm myvolume
+
+:: Copy files (you need to create test.txt first)
+docker cp test.txt vol-test:/data
+docker cp vol-test:/data/test.txt .
+
+:: Exec & Logs
+docker exec -it vol-test cmd
+docker logs vol-test
+docker inspect vol-test
+
+:: Networking
+docker network create my-network
+docker network ls
+docker run -d --name mongo --network my-network mongo
+docker run -d --name backend --network my-network node
+docker network inspect my-network
+docker network rm my-network
+
+:: Docker Compose (must be in folder with docker-compose.yml)
+docker-compose up -d
+docker-compose ps
+docker-compose logs
+docker-compose down
+
+:: Cleanup
+docker container prune -f
+docker image prune -f
+docker volume prune -f
+docker network prune -f
+docker system prune -a -f
+
+:: DockerHub Push (change yourname)
+docker login
+docker tag my-node-app yourname/my-node-app:latest
+docker push yourname/my-node-app:latest
+
+echo.
+echo ✅ All Docker Commands Executed!
+pause
